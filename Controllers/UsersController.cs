@@ -7,5 +7,10 @@ namespace JobIntelPro_API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        [HttpGet]
+        public async Task<ActionResult> GetUsers()
+        {
+
+        }
     }
 }
