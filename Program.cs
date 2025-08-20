@@ -1,31 +1,28 @@
 using JobIntelPro_API;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Text;
+using JobIntelPro_API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using DotNetEnv;
-
-Env.Load(); // loads variables from .env into Environment.GetEnvironmentVariable
-
-
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+// -------------------- Database -------------------- //
 var connectionString = builder.Configuration.GetConnectionString("JobIntelProDb");
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
+
+// -------------------- JWT Configuration -------------------- //
+var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+if (string.IsNullOrWhiteSpace(jwtKey))
+    throw new Exception("JWT_KEY is missing in appsettings.json");
+
+// Decode Base64 -> byte[]
+var keyBytes = Convert.FromBase64String(jwtKey);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -42,26 +39,37 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(keyBytes)
     };
 });
 
+
+// Register JWTService for DI
+builder.Services.AddScoped<JWTService>();
+
+// -------------------- CORS -------------------- //
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-        });
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
 });
 
+// -------------------- Controllers & Swagger -------------------- //
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// -------------------- Build App -------------------- //
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// -------------------- Middleware -------------------- //
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -69,9 +77,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowReactApp");
-
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();

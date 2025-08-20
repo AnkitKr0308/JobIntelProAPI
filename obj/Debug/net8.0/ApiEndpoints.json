@@ -1,0 +1,70 @@
+[
+  {
+    "ContainingType": "JobIntelPro_API.Controllers.AuthController",
+    "Method": "LoginUser",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "login",
+        "Type": "JobIntelPro_API.DTO.LoginDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobIntelPro_API.Controllers.AuthController",
+    "Method": "Logout",
+    "RelativePath": "api/Auth/logout",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobIntelPro_API.Controllers.AuthController",
+    "Method": "SignUpUser",
+    "RelativePath": "api/Auth/signup",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "user",
+        "Type": "JobIntelPro_API.Models.Users",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobIntelPro_API.Controllers.JobsController",
+    "Method": "GetAllJobs",
+    "RelativePath": "api/Jobs/alljobs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobIntelPro_API.Controllers.JobsController",
+    "Method": "CreateJob",
+    "RelativePath": "api/Jobs/createjob",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "job",
+        "Type": "JobIntelPro_API.Models.Jobs",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

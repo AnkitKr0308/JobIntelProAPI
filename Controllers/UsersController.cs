@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using JobIntelPro_API.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobIntelPro_API.Controllers
@@ -7,10 +8,20 @@ namespace JobIntelPro_API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        [HttpGet]
-        public async Task<ActionResult> GetUsers()
-        {
 
+        private readonly AppDbContext _context;
+        private readonly JWTService _jwtService;
+
+        public UsersController(AppDbContext context, JWTService jwtService)
+        {
+            _context = context;
+            _jwtService = jwtService;
         }
+
+        //[HttpGet]
+        //public async Task<ActionResult> GetUsers()
+        //{
+
+        //}
     }
 }

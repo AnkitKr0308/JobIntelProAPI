@@ -11,9 +11,11 @@ namespace JobIntelPro_API.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public string Contact { get; set; }
+        public string Gender { get; set; }
+        
         public DateTime CreatedAt { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        
         public DateTime UpdatedAt { get; set; }
     }
 }

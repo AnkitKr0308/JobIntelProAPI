@@ -20,9 +20,13 @@ namespace JobIntelPro_API.Models
         public string ApplyURL { get; set; } 
        
         public bool IsActive { get; set; } 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public string Skills { get; set; }
+        public string CompanyDescription { get; set; }
+        public string Salary { get; set; }
+        public string Responsibilities { get; set; }
+
         public DateTime CreatedAt { get; set; }
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        
         public DateTime UpdatedAt { get; set; }
     }
 }
