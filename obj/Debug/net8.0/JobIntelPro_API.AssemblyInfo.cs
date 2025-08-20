@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JobIntelPro_API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d90ea02d785c508e3798b7edc999b2d535b3657")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+84c8be6935bb0d8a888ea34158d5694348d9e426")]
 [assembly: System.Reflection.AssemblyProductAttribute("JobIntelPro_API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JobIntelPro_API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
