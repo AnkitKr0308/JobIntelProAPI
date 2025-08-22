@@ -83,5 +83,25 @@ namespace JobIntelPro_API.Controllers
                     new { success = false, message = errorMessage });
             }
         }
+
+        [HttpGet("job/{id}")]
+        public async Task<IActionResult> GetJobById([FromRoute] int id)
+        {
+            try
+            {
+                var job = await _context.Jobs.FindAsync(id);
+                if (job == null)
+                {
+                    return NotFound(new { success = false, message = "Job not found" });
+                }
+                return Ok(new { success = true, job });
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = errorMessage });
+            }
+        }
     }
 }
