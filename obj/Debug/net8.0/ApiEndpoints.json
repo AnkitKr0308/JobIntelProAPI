@@ -53,6 +53,26 @@
   },
   {
     "ContainingType": "JobIntelPro_API.Controllers.JobsController",
+    "Method": "GetDistinctCities",
+    "RelativePath": "api/Jobs/cities",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobIntelPro_API.Controllers.JobsController",
+    "Method": "GetDistinctCountries",
+    "RelativePath": "api/Jobs/countries",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "JobIntelPro_API.Controllers.JobsController",
     "Method": "CreateJob",
     "RelativePath": "api/Jobs/createjob",
     "HttpMethod": "POST",

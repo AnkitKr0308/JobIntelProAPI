@@ -34,19 +34,19 @@ namespace JobIntelPro_API.Controllers
                 {
                     Title = job.Title,
                     Description = job.Description,
-                    Country = job.Country ?? "NULL",
-                    City = job.City ?? "NULL",
-                    Company = job.Company ?? "NULL",
-                    WorkType = job.WorkType ?? "NULL",
-                    Experience = job.Experience ?? "NULL",
-                    Batch = job.Batch ?? "NULL",
-                    Degree = job.Degree ?? "NULL",
-                    ApplyURL = job.ApplyURL ?? "NULL",
+                    Country = job.Country ?? null,
+                    City = job.City ?? null,
+                    Company = job.Company ?? null,
+                    WorkType = job.WorkType ?? null,
+                    Experience = job.Experience ?? null,
+                    Batch = job.Batch ?? null,
+                    Degree = job.Degree ?? null,
+                    ApplyURL = job.ApplyURL ?? null,
                     IsActive = job.IsActive,
-                    Skills = job.Skills ?? "NULL",
-                    CompanyDescription = job.CompanyDescription ?? "NULL",
-                    Salary = job.Salary ?? "NULL",
-                    Responsibilities = job.Responsibilities ?? "NULL",
+                    Skills = job.Skills ?? null,
+                    CompanyDescription = job.CompanyDescription ?? null,
+                    Salary = job.Salary ?? null,
+                    Responsibilities = job.Responsibilities ?? null,
                     CreatedAt = DateTime.Now,
                     UpdatedAt = DateTime.Now,
                 };
@@ -69,7 +69,7 @@ namespace JobIntelPro_API.Controllers
         {
             try
             {
-                var jobs = await _context.Jobs.ToListAsync();
+                var jobs = await _context.Jobs.OrderByDescending(j=>j.UpdatedAt).ToListAsync();
                 if (jobs == null || jobs.Count == 0)
                 {
                     return NotFound(new { success = false, message = "No jobs found" });
@@ -95,6 +95,54 @@ namespace JobIntelPro_API.Controllers
                     return NotFound(new { success = false, message = "Job not found" });
                 }
                 return Ok(new { success = true, job });
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = errorMessage });
+            }
+        }
+
+        [HttpGet("countries")]
+        public async Task<IActionResult> GetDistinctCountries()
+        {
+            try
+            {
+                var countries = await _context.Jobs
+                    .Where(j => !string.IsNullOrEmpty(j.Country) && j.Country != "NULL")
+                    .Select(j => j.Country)
+                    .Distinct()
+                    .ToListAsync();
+                if (countries == null || countries.Count == 0)
+                {
+                    return NotFound(new { success = false, message = "No countries found" });
+                }
+                return Ok(new { success = true, countries });
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = errorMessage });
+            }
+        }
+
+        [HttpGet("cities")]
+        public async Task<IActionResult> GetDistinctCities()
+        {
+            try
+            {
+                var cities = await _context.Jobs
+                    .Where(j => !string.IsNullOrEmpty(j.City) && j.City != "NULL")
+                    .Select(j => j.City)
+                    .Distinct()
+                    .ToListAsync();
+                if (cities == null || cities.Count == 0)
+                {
+                    return NotFound(new { success = false, message = "No cities found" });
+                }
+                return Ok(new { success = true, cities });
             }
             catch (Exception ex)
             {

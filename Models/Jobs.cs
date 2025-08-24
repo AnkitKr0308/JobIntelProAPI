@@ -13,17 +13,17 @@ namespace JobIntelPro_API.Models
         public string City { get; set; }
         public string Company { get; set; }
        
-        public string WorkType { get; set; } 
-        public string Experience { get; set; } 
-        public string Batch { get; set; }
-        public string Degree { get; set; } 
-        public string ApplyURL { get; set; } 
+        public string? WorkType { get; set; } 
+        public string? Experience { get; set; } 
+        public string? Batch { get; set; }
+        public string? Degree { get; set; } 
+        public string? ApplyURL { get; set; } 
        
-        public bool IsActive { get; set; } 
-        public string Skills { get; set; }
-        public string CompanyDescription { get; set; }
-        public string Salary { get; set; }
-        public string Responsibilities { get; set; }
+        public bool? IsActive { get; set; } 
+        public string? Skills { get; set; }
+        public string? CompanyDescription { get; set; }
+        public string? Salary { get; set; }
+        public string? Responsibilities { get; set; }
 
         public DateTime CreatedAt { get; set; }
         
