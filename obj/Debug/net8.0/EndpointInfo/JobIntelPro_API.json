@@ -79,6 +79,41 @@
         }
       }
     },
+    "/meta/job/{id}": {
+      "get": {
+        "tags": [
+          "JobMeta"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/meta/jobs": {
+      "get": {
+        "tags": [
+          "JobMeta"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Jobs/createjob": {
       "post": {
         "tags": [
@@ -145,6 +180,41 @@
         }
       }
     },
+    "/api/Jobs/searchjobs": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Jobs/countries": {
       "get": {
         "tags": [
@@ -161,6 +231,18 @@
       "get": {
         "tags": [
           "Jobs"
+        ],
+        "parameters": [
+          {
+            "name": "countries",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
         ],
         "responses": {
           "200": {

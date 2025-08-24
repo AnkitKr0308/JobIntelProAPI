@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using JobIntelPro_API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 
 namespace JobIntelPro_API.Controllers
@@ -104,13 +105,45 @@ namespace JobIntelPro_API.Controllers
             }
         }
 
+
+        [HttpGet("searchjobs")]
+        public async Task<IActionResult> SearchJobs([FromQuery] string? query, [FromQuery] string? country, [FromQuery] string? city)
+        {
+            try
+            {
+                var searchParam = new SqlParameter("@searchParam", query ?? string.Empty);
+                var countryParam = new SqlParameter("@countryParam", country ?? string.Empty);
+                var cityParam = new SqlParameter("@cityParam", city ?? string.Empty);
+
+                var jobs = await _context.Jobs
+                    .FromSqlRaw("EXEC sp_SearchJobs @searchParam, @countryParam, @cityParam",
+                        searchParam, countryParam, cityParam)
+                    .ToListAsync();
+
+                if (jobs == null || jobs.Count == 0)
+                {
+                    return NotFound(new { success = false, message = "No jobs found matching the query" });
+                }
+
+                return Ok(new { success = true, jobs });
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = errorMessage });
+            }
+        }
+
+
+
         [HttpGet("countries")]
         public async Task<IActionResult> GetDistinctCountries()
         {
             try
             {
                 var countries = await _context.Jobs
-                    .Where(j => !string.IsNullOrEmpty(j.Country) && j.Country != "NULL")
+                    .Where(j => !string.IsNullOrEmpty(j.Country) && j.Country !=null)
                     .Select(j => j.Country)
                     .Distinct()
                     .ToListAsync();
@@ -129,19 +162,31 @@ namespace JobIntelPro_API.Controllers
         }
 
         [HttpGet("cities")]
-        public async Task<IActionResult> GetDistinctCities()
+        public async Task<IActionResult> GetCitiesByCountry([FromQuery] List<string>? countries)
         {
             try
             {
-                var cities = await _context.Jobs
-                    .Where(j => !string.IsNullOrEmpty(j.City) && j.City != "NULL")
+                IQueryable<Jobs> query = _context.Jobs;
+
+                if (countries != null && countries.Any())
+                {
+                    query = query.Where(j => countries.Contains(j.Country) && !string.IsNullOrEmpty(j.City));
+                }
+                else
+                {
+                    query = query.Where(j => !string.IsNullOrEmpty(j.City));
+                }
+
+                var cities = await query
                     .Select(j => j.City)
                     .Distinct()
                     .ToListAsync();
+
                 if (cities == null || cities.Count == 0)
                 {
                     return NotFound(new { success = false, message = "No cities found" });
                 }
+
                 return Ok(new { success = true, cities });
             }
             catch (Exception ex)
@@ -151,5 +196,8 @@ namespace JobIntelPro_API.Controllers
                     new { success = false, message = errorMessage });
             }
         }
+
+
+
     }
 }
