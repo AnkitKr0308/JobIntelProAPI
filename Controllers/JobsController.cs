@@ -114,8 +114,6 @@ namespace JobIntelPro_API.Controllers
         {
             try
             {
-                // Wrap search with % for partial matches
-                //var searchParamValue = string.IsNullOrWhiteSpace(query) ? DBNull.Value : (object)$"%{query}%";
                 var searchParam = new SqlParameter("@searchParam",
                 string.IsNullOrWhiteSpace(query) ? (object)DBNull.Value : $"%{query}%");
 

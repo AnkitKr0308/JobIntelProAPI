@@ -14,7 +14,7 @@ namespace JobIntelPro_API.Controllers
             _context = context;
         }
 
-        // Meta page for job detail
+        
         [HttpGet("job/{id}")]
         public async Task<IActionResult> JobMeta(int id)
         {

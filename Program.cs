@@ -7,13 +7,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// -------------------- Database -------------------- //
+//Database connection
 var connectionString = builder.Configuration.GetConnectionString("JobIntelProDb");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 
-// -------------------- JWT Configuration -------------------- //
+//JWT Authentication setup
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
@@ -21,7 +21,7 @@ var jwtAudience = builder.Configuration["Jwt:Audience"];
 if (string.IsNullOrWhiteSpace(jwtKey))
     throw new Exception("JWT_KEY is missing in appsettings.json");
 
-// Decode Base64 -> byte[]
+
 var keyBytes = Convert.FromBase64String(jwtKey);
 
 builder.Services.AddAuthentication(options =>
@@ -46,10 +46,10 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-// Register JWTService for DI
+
 builder.Services.AddScoped<JWTService>();
 
-// -------------------- CORS -------------------- //
+//CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
@@ -61,15 +61,15 @@ builder.Services.AddCors(options =>
     });
 });
 
-// -------------------- Controllers & Swagger -------------------- //
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// -------------------- Build App -------------------- //
+
 var app = builder.Build();
 
-// -------------------- Middleware -------------------- //
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

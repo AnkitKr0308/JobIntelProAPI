@@ -18,10 +18,5 @@ namespace JobIntelPro_API.Controllers
             _jwtService = jwtService;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult> GetUsers()
-        //{
-
-        //}
     }
 }
