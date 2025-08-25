@@ -107,23 +107,35 @@ namespace JobIntelPro_API.Controllers
 
 
         [HttpGet("searchjobs")]
-        public async Task<IActionResult> SearchJobs([FromQuery] string? query, [FromQuery] string? country, [FromQuery] string? city)
+        public async Task<IActionResult> SearchJobs(
+            [FromQuery] string? query,
+            [FromQuery] string? country,
+            [FromQuery] string? city)
         {
             try
             {
-                var searchParam = new SqlParameter("@searchParam", query ?? string.Empty);
-                var countryParam = new SqlParameter("@countryParam", country ?? string.Empty);
-                var cityParam = new SqlParameter("@cityParam", city ?? string.Empty);
+                // Wrap search with % for partial matches
+                //var searchParamValue = string.IsNullOrWhiteSpace(query) ? DBNull.Value : (object)$"%{query}%";
+                var searchParam = new SqlParameter("@searchParam",
+                string.IsNullOrWhiteSpace(query) ? (object)DBNull.Value : $"%{query}%");
+
+                var countryParam = new SqlParameter("@countryParam",
+                    string.IsNullOrWhiteSpace(country) ? (object)DBNull.Value : country);
+
+                var cityParam = new SqlParameter("@cityParam",
+                    string.IsNullOrWhiteSpace(city) ? (object)DBNull.Value : city);
+
+                var sql = "EXEC sp_SearchJobs @searchParam, @countryParam, @cityParam";
 
                 var jobs = await _context.Jobs
-                    .FromSqlRaw("EXEC sp_SearchJobs @searchParam, @countryParam, @cityParam",
-                        searchParam, countryParam, cityParam)
+                    .FromSqlRaw(sql, searchParam, countryParam, cityParam)
                     .ToListAsync();
 
                 if (jobs == null || jobs.Count == 0)
                 {
-                    return NotFound(new { success = false, message = "No jobs found matching the query" });
+                    return Ok(new { success = true, jobs = new List<Jobs>() });
                 }
+
 
                 return Ok(new { success = true, jobs });
             }
@@ -134,6 +146,8 @@ namespace JobIntelPro_API.Controllers
                     new { success = false, message = errorMessage });
             }
         }
+
+
 
 
 
