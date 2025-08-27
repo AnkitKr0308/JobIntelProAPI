@@ -11,5 +11,6 @@ namespace JobIntelPro_API
 
         public DbSet<Users> Users { get; set; }
         public DbSet<Jobs> Jobs { get; set; }
+        public DbSet<Subscriptions> Subscriptions { get; set; }
     }
 }

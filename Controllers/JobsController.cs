@@ -108,20 +108,24 @@ namespace JobIntelPro_API.Controllers
 
         [HttpGet("searchjobs")]
         public async Task<IActionResult> SearchJobs(
-            [FromQuery] string? query,
-            [FromQuery] string? country,
-            [FromQuery] string? city)
+      [FromQuery] string? query,
+      [FromQuery] List<string>? country,   
+      [FromQuery] List<string>? city)      
         {
             try
             {
                 var searchParam = new SqlParameter("@searchParam",
-                string.IsNullOrWhiteSpace(query) ? (object)DBNull.Value : $"%{query}%");
+                    string.IsNullOrWhiteSpace(query) ? (object)DBNull.Value : query);
 
                 var countryParam = new SqlParameter("@countryParam",
-                    string.IsNullOrWhiteSpace(country) ? (object)DBNull.Value : country);
+                    (country == null || !country.Any())
+                        ? (object)DBNull.Value
+                        : string.Join(",", country));
 
                 var cityParam = new SqlParameter("@cityParam",
-                    string.IsNullOrWhiteSpace(city) ? (object)DBNull.Value : city);
+                    (city == null || !city.Any())
+                        ? (object)DBNull.Value
+                        : string.Join(",", city));
 
                 var sql = "EXEC sp_SearchJobs @searchParam, @countryParam, @cityParam";
 
@@ -134,7 +138,6 @@ namespace JobIntelPro_API.Controllers
                     return Ok(new { success = true, jobs = new List<Jobs>() });
                 }
 
-
                 return Ok(new { success = true, jobs });
             }
             catch (Exception ex)
@@ -144,7 +147,6 @@ namespace JobIntelPro_API.Controllers
                     new { success = false, message = errorMessage });
             }
         }
-
 
 
 
